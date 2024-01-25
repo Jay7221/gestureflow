@@ -11,7 +11,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="gestureflow",  # Required
-    version="0.0.1",  # Required
+    version="0.0.3",  # Required
 
     description="A library for simplifying the development of gesture based application development",  # Optional
 
@@ -30,14 +30,14 @@ setup(
         #   4 - Beta
         #   5 - Production/Stable
         "Development Status :: 1 - Planning",
-        # Indicate who your project is intended for
+
         "Intended Audience :: Developers",
-        "Topic :: Software Development :: Gesture Detection",
-        # Pick your license as you wish
+        "Topic :: Multimedia :: Graphics :: 3D Modeling",
+        "Topic :: Scientific/Engineering :: Image Processing",
+        "Topic :: Scientific/Engineering :: Image Recognition",
+
         "License :: OSI Approved :: MIT License",
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate you support Python 3. These classifiers are *not*
-        # checked by 'pip install'. See instead 'python_requires' below.
+
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
