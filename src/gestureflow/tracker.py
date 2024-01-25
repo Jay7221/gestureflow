@@ -1,7 +1,6 @@
-from typing import is_typeddict
 import mediapipe as mp
 import numpy as np
-from .settings import *
+from .definitions import *
 import cv2
 
 
@@ -80,7 +79,7 @@ def getOrientation2(vector1, vector2):
     return roll, pitch, yaw
 
 
-class Tracker:
+class HandTracker:
     def __init__(self):
         # initialize mediapipe hands module
         self.mp_hands = mp.solutions.hands
@@ -114,8 +113,8 @@ class Tracker:
                 label = results.multi_handedness[idx].classification[0].label
                 fingersUp = getFingersUp(landMarkList)
                 
-                roll, pitch, yaw = getOrientation(landMarkList[9] - landMarkList[0])
-                roll, pitch, yaw = getOrientation2(landMarkList[5] - landMarkList[0], landMarkList[17] - landMarkList[0])
+                roll, _, _ = getOrientation(landMarkList[9] - landMarkList[0])
+                _, pitch, yaw = getOrientation2(landMarkList[5] - landMarkList[0], landMarkList[17] - landMarkList[0])
 
                 state = {
                     HAND_LABEL: label,
@@ -148,7 +147,7 @@ if __name__ == "__main__":
     import cv2
     from sample_gesture_trackers import DiscGestureTracker
     from sample_state_trackers import DiscValueTracker
-    tracker = Tracker()
+    tracker = HandTracker()
     gest = DiscGestureTracker()
     valueTracker = DiscValueTracker(gest)
     tracker.add_gesture(gest)

@@ -1,5 +1,5 @@
 import numpy as np
-from .settings import *
+from .definitions import *
 
 class StateTracker:
     def __init__(self) -> None:

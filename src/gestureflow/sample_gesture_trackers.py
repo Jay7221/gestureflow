@@ -1,4 +1,4 @@
-from .settings import *
+from .definitions import *
 
 class GestureTracker:
     def __init__(self) -> None:
