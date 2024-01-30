@@ -63,6 +63,7 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
 
         x, y = point
+        x, y = 2 * x, 2 * y
         tl_x, tl_y = x - self.eraser_size, y - self.eraser_size
         br_x, br_y = x + self.eraser_size, y + self.eraser_size
         top_left = (tl_x, tl_y)
@@ -81,6 +82,12 @@ class DisplayManager:
 
     def annotate(self, point1, point2):
         cur_slide = self.canvas[self.slideNumber]
+        x1, y1 = point1
+        x2, y2 = point2
+        x1, y1 = x1 * 2, y1 * 2
+        x2, y2 = x2 * 2, y2 * 2
+        point1 = (x1, y1)
+        point2 = (x2, y2)
         cv2.line(cur_slide, point1, point2,
                  self.annotation_color, self.annotation_size)
         self.show()
@@ -96,6 +103,7 @@ class DisplayManager:
     def show_pointer(self, coords):
         cur_slide = self.canvas[self.slideNumber]
         x, y = coords
+        x, y = 2 * x, 2 * y
         tl_x, tl_y = (x - self.pointer_size, y - self.pointer_size)
         top_left = (tl_x, tl_y)
         tl_x, tl_y = tl_x - 1, tl_y - 1
