@@ -5,16 +5,18 @@ from gestureflow.tracker import HandTracker
 from gestureflow.sample_gesture_trackers import GestureTracker2D
 from gestureflow.sample_state_trackers import RotationCounter, PositionTracker
 from gestureflow.sample_runners import Runner
+from gestureflow.definitions import *
+from state_trackers import *
 
 SLIDE_CHANGE_GESTURE = [True, True, False, False, True]
-#SLIDE_CHANGE_GESTURE = [True, True, True, False, False]
+SLIDE_CHANGE_GESTURE = [True, True, True, False, False]
 POINTER_GESTURE = [False, True, False, False, False]
-ERASE_GESTURE = [True, True, True, True, True]
 ANNOTATION_GESTURE = [False, True, True, False, False]
+ERASER_GESTURE = [True, True, True, True, True]
+
 
 if __name__ == "__main__":
     state = DEFAULT_STATE_DICT
-
 
     handTracker = HandTracker()
 
@@ -23,18 +25,18 @@ if __name__ == "__main__":
     gesture3 = GestureTracker2D()
     gesture4 = GestureTracker2D()
 
+    displayManager = DisplayManager()
+
     slideNumber = RotationCounter()
     pointer = PositionTracker()
-    annotation = PositionTracker()
-    eraser = PositionTracker()
-    
-    displayManager = DisplayManager()
+    annotation = AnnotationTracker(displayManager)
+    eraser = EraserTracker(displayManager)
+
     runner = Runner()
 
     slideNumber.setMin(0)
     slideNumber.setMax(10)
     slideNumber.setDiscUnit(30)
-
 
     def set_slide_number(slideNo):
         slideNo = int(slideNo)
@@ -46,15 +48,10 @@ if __name__ == "__main__":
     def annotate(coords):
         displayManager.annotate(coords[1])
 
-    def erase(coords):
-        displayManager.erase(coords[5])
-
     gesture1.addGesture(SLIDE_CHANGE_GESTURE)
     gesture2.addGesture(POINTER_GESTURE)
     gesture3.addGesture(ANNOTATION_GESTURE)
-    gesture4.addGesture(ERASE_GESTURE)
-
-    gesture2.setTrackLefttHand(False)
+    gesture4.addGesture(ERASER_GESTURE)
 
     gesture1.addStateTracker(slideNumber)
     gesture2.addStateTracker(pointer)
@@ -68,9 +65,8 @@ if __name__ == "__main__":
 
     slideNumber.setOnUpdate(set_slide_number)
     pointer.setOnUpdate(show_pointer)
-    eraser.setOnUpdate(erase)
-    annotation.setOnUpdate(annotate)
 
+    # displayManager.load_from_pptx('test2.pptx')
     displayManager.load_folder('test')
 
     trackerThread = Thread(target=runner.loop, args=[handTracker])
