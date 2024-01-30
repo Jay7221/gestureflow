@@ -9,6 +9,12 @@ import numpy as np
 import copy
 import cv2
 
+TOOL_BAR_COLOR = (128, 128, 128)
+
+
+def rectangle_coords(x, y, size):
+    return (x - size, y - size, x + size, y + size)
+
 
 def save_slides_as_png(input_filename, output_foldername):
     image_paths = []
@@ -39,7 +45,7 @@ class DisplayManager:
         self.slideNumber = 1
 
         self.pointer_size = 4
-        self.poniter_color = (255, 0, 0)
+        self.pointer_color = (255, 0, 0)
 
         self.eraser_size = 8
         self.eraser_color = (0, 0, 255)
@@ -52,7 +58,7 @@ class DisplayManager:
     def erase(self, point1, point2):
         cur_slide = self.canvas[self.slideNumber]
         cv2.line(cur_slide, point1, point2,
-                 self.poniter_color, self.pointer_size)
+                 self.pointer_color, self.pointer_size)
         self.show()
 
     def show_eraser(self, point):
@@ -60,8 +66,7 @@ class DisplayManager:
 
         x, y = point
         x, y = 2 * x, 2 * y
-        tl_x, tl_y = x - self.eraser_size, y - self.eraser_size
-        br_x, br_y = x + self.eraser_size, y + self.eraser_size
+        tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.eraser_size)
         top_left = (tl_x, tl_y)
         bottom_right = (br_x, br_y)
 
@@ -107,7 +112,7 @@ class DisplayManager:
         point1 = (x1, y1)
         point2 = (x2, y2)
         cv2.line(cur_slide, point1, point2,
-                 self.poniter_color, self.pointer_size)
+                 self.pointer_color, self.pointer_size)
         self.show()
 
     def show(self):
@@ -122,17 +127,18 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
         x, y = coords
         x, y = 2 * x, 2 * y
-        tl_x, tl_y = (x - self.pointer_size, y - self.pointer_size)
+        tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.pointer_size)
+
         top_left = (tl_x, tl_y)
-        tl_x, tl_y = tl_x - 1, tl_y - 1
-        br_x, br_y = (x + self.pointer_size, y + self.pointer_size)
         bottom_right = (br_x, br_y)
+
+        tl_x, tl_y = tl_x - 1, tl_y - 1
         br_x, br_y = br_x + 1, br_y + 1
 
         original_region = cur_slide[tl_y:br_y, tl_x:br_x].copy()
 
         cv2.rectangle(cur_slide, top_left, bottom_right,
-                      self.poniter_color, thickness=-1)
+                      self.pointer_color, thickness=-1)
 
         self.show()
 
@@ -192,14 +198,42 @@ class DisplayManager:
 
     def set_pointer_size(self, pointer_size):
         self.pointer_size = pointer_size
-        self.show_pointer((10, 10))
-
-    def set_pointer_size(self, pointer_size):
-        self.pointer_size = pointer_size
+        self.show_tools()
 
     def set_eraser_size(self, eraser_size):
         self.eraser_size = eraser_size
-        self.show_eraser((10, 10))
+        self.show_tools()
+
+    def show_tools(self):
+        cur_slide = self.canvas[self.slideNumber]
+
+        px1, py1, px2, py2 = rectangle_coords(20, 20, self.pointer_size)
+        pointer_top_left = (px1, py1)
+        pointer_bottom_right = (px2, py2)
+
+        ex1, ey1, ex2, ey2 = rectangle_coords(50, 50, self.eraser_size)
+        eraser_top_left = (ex1, ey1)
+        eraser_bottom_right = (ex2, ey2)
+
+        top_left = (0, 0)
+        bottom_right = (100, 100)
+        tl_x, tl_y = top_left
+        br_x, br_y = bottom_right
+
+        br_x += 1
+        br_y += 1
+
+        original_region = cur_slide[tl_y:br_y, tl_x:br_x].copy()
+        cv2.rectangle(cur_slide, top_left, bottom_right,
+                      TOOL_BAR_COLOR, thickness=-1)
+
+        cv2.rectangle(cur_slide, pointer_top_left, pointer_bottom_right,
+                      self.pointer_color, thickness=-1)
+        cv2.rectangle(cur_slide, eraser_top_left, eraser_bottom_right,
+                      self.eraser_color, thickness=-1)
+
+        self.show()
+        cur_slide[tl_y:br_y, tl_x:br_x] = original_region
 
 
 def update(displayManager):
