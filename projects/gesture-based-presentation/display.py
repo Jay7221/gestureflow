@@ -36,13 +36,10 @@ class DisplayManager:
         self.slides = []
         self.canvas = []
         self.slidePaths = []
-        self.slideNumber = 0
+        self.slideNumber = 1
 
-        self.pointer_size = 2
+        self.pointer_size = 4
         self.poniter_color = (255, 0, 0)
-
-        self.annotation_size = 4
-        self.annotation_color = (0, 255, 0)
 
         self.eraser_size = 8
         self.eraser_color = (0, 0, 255)
@@ -55,8 +52,29 @@ class DisplayManager:
     def erase(self, point1, point2):
         cur_slide = self.canvas[self.slideNumber]
         cv2.line(cur_slide, point1, point2,
-                 self.annotation_color, self.annotation_size)
+                 self.poniter_color, self.pointer_size)
         self.show()
+
+    def show_eraser(self, point):
+        cur_slide = self.canvas[self.slideNumber]
+
+        x, y = point
+        x, y = 2 * x, 2 * y
+        tl_x, tl_y = x - self.eraser_size, y - self.eraser_size
+        br_x, br_y = x + self.eraser_size, y + self.eraser_size
+        top_left = (tl_x, tl_y)
+        bottom_right = (br_x, br_y)
+
+        tl_x, tl_y = tl_x - 1, tl_y - 1
+        br_x, br_y = br_x + 1, br_y + 1
+
+        prev_region = cur_slide[tl_y:br_y, tl_x:br_x].copy()
+
+        cv2.rectangle(cur_slide, top_left, bottom_right,
+                      self.eraser_color, thickness=-1)
+
+        self.show()
+        cur_slide[tl_y:br_y, tl_x:br_x] = prev_region
 
     def erase_point(self, point):
 
@@ -89,7 +107,7 @@ class DisplayManager:
         point1 = (x1, y1)
         point2 = (x2, y2)
         cv2.line(cur_slide, point1, point2,
-                 self.annotation_color, self.annotation_size)
+                 self.poniter_color, self.pointer_size)
         self.show()
 
     def show(self):
@@ -155,6 +173,7 @@ class DisplayManager:
         self.root.title(self.title)
         self.slidePaths = [os.path.join(folderPath, fileName)
                            for fileName in os.listdir(folderPath)]
+        self.slidePaths.sort()
         self.load_images()
         self.show()
 
@@ -170,6 +189,17 @@ class DisplayManager:
 
     def runLoop(self):
         self.root.mainloop()
+
+    def set_pointer_size(self, pointer_size):
+        self.pointer_size = pointer_size
+        self.show_pointer((10, 10))
+
+    def set_pointer_size(self, pointer_size):
+        self.pointer_size = pointer_size
+
+    def set_eraser_size(self, eraser_size):
+        self.eraser_size = eraser_size
+        self.show_eraser((10, 10))
 
 
 def update(displayManager):

@@ -7,12 +7,19 @@ from gestureflow.sample_state_trackers import RotationCounter, PositionTracker
 from gestureflow.sample_runners import Runner
 from gestureflow.definitions import *
 from state_trackers import *
+from gesture_trackers import TwoHandTracker
 
 SLIDE_CHANGE_GESTURE = [True, True, False, False, True]
 SLIDE_CHANGE_GESTURE = [True, True, True, False, False]
 POINTER_GESTURE = [False, True, False, False, False]
 ANNOTATION_GESTURE = [False, True, True, False, False]
 ERASER_GESTURE = [True, True, True, True, True]
+
+
+RIGHT_HAND_GESTURE = [False, True, True, True, False]
+
+SLIDE_CHANGE_LEFT_HAND_GESTURE = [True, True, True, True, True]
+POINTER_SIZE_LEFT_HAND_GESTURE = [True, True, True, True, True]
 
 
 if __name__ == "__main__":
@@ -25,12 +32,21 @@ if __name__ == "__main__":
     gesture3 = GestureTracker2D()
     gesture4 = GestureTracker2D()
 
+    gesture1.setTrackLefttHand(False)
+    gesture2.setTrackLefttHand(False)
+    gesture3.setTrackLefttHand(False)
+    gesture4.setTrackLefttHand(False)
+
+    two_hand_gesture1 = TwoHandTracker()
+
     displayManager = DisplayManager()
 
     slideNumber = RotationCounter()
     pointer = PositionTracker()
+
     annotation = AnnotationTracker(displayManager)
     eraser = EraserTracker(displayManager)
+    slide_tracker = SlideChangeTracker(displayManager)
 
     runner = Runner()
 
@@ -48,20 +64,27 @@ if __name__ == "__main__":
     def annotate(coords):
         displayManager.annotate(coords[1])
 
-    gesture1.addGesture(SLIDE_CHANGE_GESTURE)
+    # gesture1.addGesture(SLIDE_CHANGE_GESTURE)
     gesture2.addGesture(POINTER_GESTURE)
     gesture3.addGesture(ANNOTATION_GESTURE)
     gesture4.addGesture(ERASER_GESTURE)
+
+    two_hand_gesture1.set_left_gesture(SLIDE_CHANGE_LEFT_HAND_GESTURE)
+    two_hand_gesture1.set_right_gesture(RIGHT_HAND_GESTURE)
 
     gesture1.addStateTracker(slideNumber)
     gesture2.addStateTracker(pointer)
     gesture3.addStateTracker(annotation)
     gesture4.addStateTracker(eraser)
 
+    two_hand_gesture1.addStateTracker(slide_tracker)
+
     handTracker.add_gesture(gesture1)
     handTracker.add_gesture(gesture2)
     handTracker.add_gesture(gesture3)
     handTracker.add_gesture(gesture4)
+
+    handTracker.add_gesture(two_hand_gesture1)
 
     slideNumber.setOnUpdate(set_slide_number)
     pointer.setOnUpdate(show_pointer)
