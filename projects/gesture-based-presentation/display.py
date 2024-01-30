@@ -16,6 +16,10 @@ def rectangle_coords(x, y, size):
     return (x - size, y - size, x + size, y + size)
 
 
+def map_points(x, y):
+    return (2 * x - 50, 2 * y - 50)
+
+
 def save_slides_as_png(input_filename, output_foldername):
     image_paths = []
     # Load the PowerPoint presentation
@@ -42,12 +46,12 @@ class DisplayManager:
         self.slides = []
         self.canvas = []
         self.slidePaths = []
-        self.slideNumber = 1
+        self.slideNumber = 0
 
         self.pointer_size = 4
         self.pointer_color = (255, 0, 0)
 
-        self.eraser_size = 8
+        self.eraser_size = 15
         self.eraser_color = (0, 0, 255)
 
         self.root = Tk()
@@ -65,7 +69,8 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
 
         x, y = point
-        x, y = 2 * x, 2 * y
+        x, y = map_points(x, y)
+
         tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.eraser_size)
         top_left = (tl_x, tl_y)
         bottom_right = (br_x, br_y)
@@ -86,7 +91,8 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
 
         x, y = point
-        x, y = 2 * x, 2 * y
+        x, y = map_points(x, y)
+
         tl_x, tl_y = x - self.eraser_size, y - self.eraser_size
         br_x, br_y = x + self.eraser_size, y + self.eraser_size
         top_left = (tl_x, tl_y)
@@ -126,7 +132,8 @@ class DisplayManager:
     def show_pointer(self, coords):
         cur_slide = self.canvas[self.slideNumber]
         x, y = coords
-        x, y = 2 * x, 2 * y
+        x, y = map_points(x, y)
+
         tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.pointer_size)
 
         top_left = (tl_x, tl_y)
