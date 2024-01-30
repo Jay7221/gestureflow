@@ -17,7 +17,8 @@ def rectangle_coords(x, y, size):
 
 
 def map_points(x, y):
-    return (2 * x - 50, 2 * y - 50)
+    x, y = 2 * x - 50, 2 * y - 50
+    return (int(x), int(y))
 
 
 def save_slides_as_png(input_filename, output_foldername):

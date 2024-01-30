@@ -20,6 +20,7 @@ RIGHT_HAND_GESTURE = [False, True, True, True, False]
 
 SLIDE_CHANGE_LEFT_HAND_GESTURE = [True, True, True, True, True]
 POINTER_SIZE_LEFT_HAND_GESTURE = [False, True, True, True, True]
+ERASER_SIZE_LEFT_HAND_GESTURE = [False, True, True, True, False]
 
 
 if __name__ == "__main__":
@@ -39,6 +40,7 @@ if __name__ == "__main__":
 
     two_hand_gesture1 = TwoHandTracker()
     two_hand_gesture2 = TwoHandTracker()
+    two_hand_gesture3 = TwoHandTracker()
 
     displayManager = DisplayManager()
 
@@ -49,6 +51,7 @@ if __name__ == "__main__":
     eraser = EraserTracker(displayManager)
     slide_tracker = SlideChangeTracker(displayManager)
     pointer_size_tracker = SizeChangeTracker(displayManager)
+    eraser_size_tracker = EraserSizeChangeTracker(displayManager)
 
     runner = Runner()
 
@@ -77,6 +80,9 @@ if __name__ == "__main__":
     two_hand_gesture2.set_left_gesture(POINTER_SIZE_LEFT_HAND_GESTURE)
     two_hand_gesture2.set_right_gesture(RIGHT_HAND_GESTURE)
 
+    two_hand_gesture3.set_left_gesture(ERASER_SIZE_LEFT_HAND_GESTURE)
+    two_hand_gesture3.set_right_gesture(RIGHT_HAND_GESTURE)
+
     gesture1.addStateTracker(slideNumber)
     gesture2.addStateTracker(pointer)
     gesture3.addStateTracker(annotation)
@@ -84,6 +90,7 @@ if __name__ == "__main__":
 
     two_hand_gesture1.addStateTracker(slide_tracker)
     two_hand_gesture2.addStateTracker(pointer_size_tracker)
+    two_hand_gesture3.addStateTracker(eraser_size_tracker)
 
     handTracker.add_gesture(gesture1)
     handTracker.add_gesture(gesture2)
@@ -92,6 +99,7 @@ if __name__ == "__main__":
 
     handTracker.add_gesture(two_hand_gesture1)
     handTracker.add_gesture(two_hand_gesture2)
+    handTracker.add_gesture(two_hand_gesture3)
 
     slideNumber.setOnUpdate(set_slide_number)
     pointer.setOnUpdate(show_pointer)

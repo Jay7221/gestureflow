@@ -64,9 +64,9 @@ class SizeChangeTracker():
     def __init__(self, displayManager) -> None:
         self.prev_position = None
         self.displayManager = displayManager
-        self.displacement = 0
-        self.pointerSize = 0
+        self.pointerSize = 4
         self.pointerSizeUnits = 50
+        self.displacement = self.pointerSize * self.pointerSizeUnits
 
         self.max_pointer_size = 10
         self.min_pointer_size = 1
@@ -84,6 +84,35 @@ class SizeChangeTracker():
                     self.min_pointer_size * self.pointerSizeUnits, self.displacement))
                 self.pointerSize = self.displacement // self.pointerSizeUnits
                 self.displayManager.set_pointer_size(self.pointerSize)
+            self.prev_position = cur_position
+        else:
+            self.prev_position = None
+
+
+class EraserSizeChangeTracker():
+    def __init__(self, displayManager) -> None:
+        self.prev_position = None
+        self.displayManager = displayManager
+        self.pointerSize = 8
+        self.pointerSizeUnits = 50
+        self.displacement = self.pointerSize * self.pointerSizeUnits
+
+        self.max_pointer_size = 30
+        self.min_pointer_size = 1
+
+    def set_min_max(self, min_pointer_size, max_pointer_size):
+        self.max_pointer_size = max_pointer_size
+        self.min_pointer_size = min_pointer_size
+
+    def update(self, state):
+        if state[GESTURE_FOUND]:
+            cur_position = state[RIGHT_POINT]
+            if self.prev_position:
+                self.displacement += cur_position[0] - self.prev_position[0]
+                self.displacement = min(self.max_pointer_size * self.pointerSizeUnits, max(
+                    self.min_pointer_size * self.pointerSizeUnits, self.displacement))
+                self.pointerSize = self.displacement // self.pointerSizeUnits
+                self.displayManager.set_eraser_size(self.pointerSize)
             self.prev_position = cur_position
         else:
             self.prev_position = None
