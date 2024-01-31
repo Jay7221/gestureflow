@@ -66,6 +66,12 @@ class DisplayManager:
     def on_resize(self, event):
         self.show()
 
+    def clip_point(self, point):
+        x, y = point
+        x = max(x, 0)
+        y = max(y, 0)
+        return (x, y)
+
     def erase(self, point1, point2):
         cur_slide = self.canvas[self.slideNumber]
         cv2.line(cur_slide, point1, point2,
@@ -79,11 +85,18 @@ class DisplayManager:
         x, y = self.transform_points(x, y)
 
         tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.eraser_size)
+
+        tl_x, tl_y = self.clip_point((tl_x, tl_y))
+        br_x, br_y = self.clip_point((br_x, br_y))
+
         top_left = (tl_x, tl_y)
         bottom_right = (br_x, br_y)
 
         tl_x, tl_y = tl_x - 1, tl_y - 1
         br_x, br_y = br_x + 1, br_y + 1
+
+        tl_x, tl_y = self.clip_point((tl_x, tl_y))
+        br_x, br_y = self.clip_point((br_x, br_y))
 
         prev_region = cur_slide[tl_y:br_y, tl_x:br_x].copy()
 
@@ -102,11 +115,18 @@ class DisplayManager:
 
         tl_x, tl_y = x - self.eraser_size, y - self.eraser_size
         br_x, br_y = x + self.eraser_size, y + self.eraser_size
+
+        tl_x, tl_y = self.clip_point((tl_x, tl_y))
+        br_x, br_y = self.clip_point((br_x, br_y))
+
         top_left = (tl_x, tl_y)
         bottom_right = (br_x, br_y)
 
         tl_x, tl_y = tl_x - 1, tl_y - 1
         br_x, br_y = br_x + 1, br_y + 1
+
+        tl_x, tl_y = self.clip_point((tl_x, tl_y))
+        br_x, br_y = self.clip_point((br_x, br_y))
 
         cv2.rectangle(cur_slide, top_left, bottom_right,
                       self.eraser_color, thickness=-1)
@@ -122,6 +142,11 @@ class DisplayManager:
         x2, y2 = point2
         x1, y1 = self.transform_points(x1, y1)
         x2, y2 = self.transform_points(x2, y2)
+
+        x1, y1 = self.clip_point((x1, y1))
+        x2, y2 = self.clip_point((x2, y2))
+
+
         point1 = (x1, y1)
         point2 = (x2, y2)
         cv2.line(cur_slide, point1, point2,

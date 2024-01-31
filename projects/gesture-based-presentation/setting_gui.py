@@ -17,24 +17,25 @@ ASSETS_PATH = OUTPUT_PATH / Path(r"/home/calto/build/assets/frame1")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+
 def open_setting():
     window = Tk()
 
     window.geometry("1440x1024")
-    window.configure(bg = "#3B3B3B")
-
+    window.configure(bg="#3B3B3B")
+    window.title("Gesture Settings")
 
     canvas = Canvas(
         window,
-        bg = "#3B3B3B",
-        height = 1024,
-        width = 1440,
-        bd = 0,
-        highlightthickness = 0,
-        relief = "ridge"
+        bg="#3B3B3B",
+        height=1024,
+        width=1440,
+        bd=0,
+        highlightthickness=0,
+        relief="ridge"
     )
 
-    canvas.place(x = 0, y = 0)
+    canvas.place(x=0, y=0)
     image_image_1 = PhotoImage(
         file=os.path.join('assets', 'frame1', "image_1.png"))
     image_1 = canvas.create_image(
@@ -91,8 +92,9 @@ def open_setting():
         869.0,
         image=image_image_6
     )
+
     def change_slide_left():
-        capture_gesture(SLIDE_CHANGE_GESTURE,capture_right=False)
+        capture_gesture(SLIDE_CHANGE_GESTURE, capture_right=False)
     button_image_1 = PhotoImage(
         file=os.path.join('assets', 'frame1', "button_1.png"))
     button_1 = Button(
@@ -108,6 +110,7 @@ def open_setting():
         width=65.0,
         height=63.0
     )
+
     def change_erase():
         capture_gesture(ERASE_GESTURE)
     button_image_2 = PhotoImage(
@@ -125,10 +128,11 @@ def open_setting():
         width=65.0,
         height=63.0
     )
+
     def change_point_left():
-        capture_gesture(POINTER_SIZE_CHANGE_GESTURE,capture_right=False)
+        capture_gesture(POINTER_SIZE_CHANGE_GESTURE, capture_right=False)
     button_image_3 = PhotoImage(
-            file=os.path.join('assets', 'frame1', "button_1.png"))
+        file=os.path.join('assets', 'frame1', "button_1.png"))
 
     button_3 = Button(
         image=button_image_3,
@@ -143,12 +147,13 @@ def open_setting():
         width=65.0,
         height=63.0
     )
+
     def change_pointing():
         window.destroy()
         capture_gesture(POINTING_GESTURE)
 
     button_image_4 = PhotoImage(
-            file=os.path.join('assets', 'frame1', "button_1.png"))
+        file=os.path.join('assets', 'frame1', "button_1.png"))
 
     button_4 = Button(
         image=button_image_4,
@@ -163,11 +168,12 @@ def open_setting():
         width=65.0,
         height=63.0
     )
+
     def change_annotating():
         window.destroy()
         capture_gesture(ANNOTATING_GESTURE)
     button_image_5 = PhotoImage(
-            file=os.path.join('assets', 'frame1', "button_1.png"))
+        file=os.path.join('assets', 'frame1', "button_1.png"))
 
     button_5 = Button(
         image=button_image_5,
@@ -182,11 +188,12 @@ def open_setting():
         width=65.0,
         height=63.0
     )
+
     def change_slide_right():
         window.destroy()
-        capture_gesture(SLIDE_CHANGE_GESTURE,capture_left=False)
+        capture_gesture(SLIDE_CHANGE_GESTURE, capture_left=False)
     button_image_6 = PhotoImage(
-            file=os.path.join('assets', 'frame1', "button_1.png"))
+        file=os.path.join('assets', 'frame1', "button_1.png"))
 
     button_6 = Button(
         image=button_image_6,
@@ -201,11 +208,12 @@ def open_setting():
         width=65.0,
         height=63.0
     )
+
     def change_point_right():
         window.destroy()
-        capture_gesture(POINTER_SIZE_CHANGE_GESTURE,capture_left=False)
+        capture_gesture(POINTER_SIZE_CHANGE_GESTURE, capture_left=False)
     button_image_7 = PhotoImage(
-            file=os.path.join('assets', 'frame1', "button_1.png"))
+        file=os.path.join('assets', 'frame1', "button_1.png"))
 
     button_7 = Button(
         image=button_image_7,
@@ -222,7 +230,8 @@ def open_setting():
     )
 
     button_image_8 = PhotoImage(
-            file=os.path.join('assets', 'frame1', "button_8.png"))
+        file=os.path.join('assets', 'frame1', "button_8.png"))
+
     def open_home_page():
         from gui import open_home
         window.destroy()
@@ -241,8 +250,29 @@ def open_setting():
         height=69.0
     )
 
+    def reset_settings():
+        if os.path.exists(GESTURE_FILE):
+            os.remove(GESTURE_FILE)
+
+    if os.path.exists(GESTURE_FILE):
+        button_image_9 = PhotoImage(
+            file=os.path.join('assets', 'frame1', "button_9.png"))
+        button_9 = Button(
+            image=button_image_9,
+            borderwidth=0,
+            highlightthickness=0,
+            command=reset_settings,
+            relief="flat"
+        )
+        button_9.place(
+            x=82.0,
+            y=937.0,
+            width=321.0,
+            height=55.0
+        )
+
     image_image_7 = PhotoImage(
-            file=os.path.join('assets', 'frame1', "image_7.png"))
+        file=os.path.join('assets', 'frame1', "image_7.png"))
 
     image_7 = canvas.create_image(
         883.0,
@@ -257,6 +287,9 @@ def open_setting():
         582.0,
         image=image_image_8
     )
+
+
+
 
     image_image_9 = PhotoImage(
         file=os.path.join('assets', 'frame1', "image_9.png"))
@@ -304,4 +337,3 @@ def open_setting():
     window.resizable(True, True)
 
     window.mainloop()
-
