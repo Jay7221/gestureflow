@@ -7,8 +7,14 @@ import mediapipe as mp
 from gestureflow.tracker import HandTracker
 from gestureflow.sample_gesture_trackers import GestureTracker
 from gestureflow.definitions import FINGERS_UP, HAND_LABEL
-import numpy as np
+import json
+from settings import *
+import os
 
+
+if not os.path.exists(GESTURE_FILE):
+    with open(GESTURE_FILE, "w") as gesture_file:
+        json.dump(GESTURES, gesture_file)
 
 class FingerTracker(GestureTracker):
     def __init__(self) -> None:
@@ -67,6 +73,8 @@ class WebcamApp:
         self.tracker = HandTracker()
         self.gesture = ()
 
+        self.gesture_name = gesture_name
+
         if self.capture_left:
             self.left_tracker = FingerTracker()
             self.left_tracker.setTrackRightHand(False)
@@ -77,18 +85,20 @@ class WebcamApp:
             self.right_tracker.setTrackLefttHand(False)
             self.tracker.add_gesture(self.right_tracker)
 
-        print(self.tracker.gestures)
+        with open(GESTURE_FILE) as gesture_file:
+            self.gestures = json.load(gesture_file)
+
 
         self.update()
 
     def mainloop(self):
+        self.gestures[self.gesture_name] = self.gesture
+        with open(GESTURE_FILE, 'w') as gesture_file:
+            json.dump(self.gestures, gesture_file)
         self.window.mainloop()
 
     def capture(self):
-        ret, frame = self.vid.read()
-        frame = cv2.flip(frame, 1)
-        if ret:
-            pass
+
         self.window.destroy()
 
     def update(self):

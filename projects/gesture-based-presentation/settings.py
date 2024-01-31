@@ -49,3 +49,5 @@ GESTURES = {
     SLIDE_CHANGE_GESTURE: ([True, True, True, True, True], [False, True, True, True, False]),
     POINTER_SIZE_CHANGE_GESTURE: ([False, True, True, True, True], [False, True, True, True, False]),
 }
+
+GESTURE_FILE = 'gestures.json'

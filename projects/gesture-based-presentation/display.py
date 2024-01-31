@@ -16,9 +16,6 @@ def rectangle_coords(x, y, size):
     return (x - size, y - size, x + size, y + size)
 
 
-def transform_points(x, y):
-    x, y = 2 * x - 50, 2 * y - 50
-    return (int(x), int(y))
 
 
 def save_slides_as_png(input_filename, output_foldername):
@@ -60,6 +57,12 @@ class DisplayManager:
         self.image_label.pack()
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
+        self.size = (0, 0)
+
+    def transform_points(self, x, y):
+        x, y = 2 * x - 50, 2 * y - 50
+        return (int(x), int(y))
+
     def on_resize(self, event):
         self.show()
 
@@ -73,7 +76,7 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
 
         x, y = point
-        x, y = transform_points(x, y)
+        x, y = self.transform_points(x, y)
 
         tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.eraser_size)
         top_left = (tl_x, tl_y)
@@ -95,7 +98,7 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
 
         x, y = point
-        x, y = transform_points(x, y)
+        x, y = self.transform_points(x, y)
 
         tl_x, tl_y = x - self.eraser_size, y - self.eraser_size
         br_x, br_y = x + self.eraser_size, y + self.eraser_size
@@ -117,8 +120,8 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
         x1, y1 = point1
         x2, y2 = point2
-        x1, y1 = transform_points(x1, y1)
-        x2, y2 = transform_points(x2, y2)
+        x1, y1 = self.transform_points(x1, y1)
+        x2, y2 = self.transform_points(x2, y2)
         point1 = (x1, y1)
         point2 = (x2, y2)
         cv2.line(cur_slide, point1, point2,
@@ -126,13 +129,15 @@ class DisplayManager:
         self.show()
 
     def show(self):
-        width, height = (self.root.winfo_width(), self.root.winfo_height())
+        width, height = (self.root.winfo_width() - 10, self.root.winfo_height() - 10)
         cur_slide = self.canvas[self.slideNumber]
         pil_slide = Image.fromarray(cur_slide)
         slide_width, slide_height = pil_slide.size
         slide_width = max(slide_width, width)
         slide_height = max(slide_height, height)
-        pil_slide = pil_slide.resize((slide_width, slide_height))
+        self.size = (slide_width, slide_height)
+        pil_slide = pil_slide.resize(self.size)
+
 
         photo = ImageTk.PhotoImage(pil_slide)
         self.image_label.config(image=photo)
@@ -141,7 +146,7 @@ class DisplayManager:
     def show_pointer(self, coords):
         cur_slide = self.canvas[self.slideNumber]
         x, y = coords
-        x, y = transform_points(x, y)
+        x, y = self.transform_points(x, y)
 
         tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.pointer_size)
 
@@ -218,7 +223,6 @@ class DisplayManager:
 
     def set_eraser_size(self, eraser_size):
         self.eraser_size = eraser_size
-        self.show_tools()
 
     def show_tools(self):
         cur_slide = self.canvas[self.slideNumber]
