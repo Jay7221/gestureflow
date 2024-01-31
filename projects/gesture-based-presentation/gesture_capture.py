@@ -92,14 +92,16 @@ class WebcamApp:
         self.update()
 
     def mainloop(self):
-        self.gestures[self.gesture_name] = self.gesture
-        with open(GESTURE_FILE, 'w') as gesture_file:
-            json.dump(self.gestures, gesture_file)
         self.window.mainloop()
 
     def capture(self):
-
+        from setting_gui import open_setting
+        self.vid.release()
         self.window.destroy()
+        self.gestures[self.gesture_name] = self.gesture
+        with open(GESTURE_FILE, 'w') as gesture_file:
+            json.dump(self.gestures, gesture_file)
+        open_setting()
 
     def update(self):
         ret, frame = self.vid.read()
@@ -125,9 +127,9 @@ class WebcamApp:
         if self.vid.isOpened():
             self.vid.release()
 
-def capture_gesture(gesture_name):
+def capture_gesture(gesture_name, capture_left=True, capture_right=True):
     root = ThemedTk(theme="radiance")  # You can change the theme to your preference
-    app = WebcamApp(root, gesture_name)
+    app = WebcamApp(root, window_title=gesture_name, gesture_name=gesture_name, capture_left=capture_left, capture_right=capture_right)
     app.mainloop()
 
 if __name__ == '__main__':

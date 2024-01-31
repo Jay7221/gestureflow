@@ -136,7 +136,9 @@ def present(presentation_path, is_folder=True):
 
     displayManager.runLoop()
 
+    runner.cap.release()
+
 
 
 if __name__ == "__main__":
-    present_folder('test')
+    present('test')
