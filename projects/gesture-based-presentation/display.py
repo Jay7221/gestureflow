@@ -16,7 +16,7 @@ def rectangle_coords(x, y, size):
     return (x - size, y - size, x + size, y + size)
 
 
-def map_points(x, y):
+def transform_points(x, y):
     x, y = 2 * x - 50, 2 * y - 50
     return (int(x), int(y))
 
@@ -70,7 +70,7 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
 
         x, y = point
-        x, y = map_points(x, y)
+        x, y = transform_points(x, y)
 
         tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.eraser_size)
         top_left = (tl_x, tl_y)
@@ -92,7 +92,7 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
 
         x, y = point
-        x, y = map_points(x, y)
+        x, y = transform_points(x, y)
 
         tl_x, tl_y = x - self.eraser_size, y - self.eraser_size
         br_x, br_y = x + self.eraser_size, y + self.eraser_size
@@ -114,8 +114,8 @@ class DisplayManager:
         cur_slide = self.canvas[self.slideNumber]
         x1, y1 = point1
         x2, y2 = point2
-        x1, y1 = x1 * 2, y1 * 2
-        x2, y2 = x2 * 2, y2 * 2
+        x1, y1 = transform_points(x1, y1)
+        x2, y2 = transform_points(x2, y2)
         point1 = (x1, y1)
         point2 = (x2, y2)
         cv2.line(cur_slide, point1, point2,
@@ -133,7 +133,7 @@ class DisplayManager:
     def show_pointer(self, coords):
         cur_slide = self.canvas[self.slideNumber]
         x, y = coords
-        x, y = map_points(x, y)
+        x, y = transform_points(x, y)
 
         tl_x, tl_y, br_x, br_y = rectangle_coords(x, y, self.pointer_size)
 

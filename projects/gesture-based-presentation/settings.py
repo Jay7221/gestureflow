@@ -32,4 +32,4 @@ DEFAULT_STATE_DICT = {
 }
 
 ANGLE_UNIT = 20
-IMAGE_PATH = 'images'
+IMAGE_PATH = 'presentations'

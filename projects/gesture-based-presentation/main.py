@@ -22,10 +22,7 @@ SLIDE_CHANGE_LEFT_HAND_GESTURE = [True, True, True, True, True]
 POINTER_SIZE_LEFT_HAND_GESTURE = [False, True, True, True, True]
 ERASER_SIZE_LEFT_HAND_GESTURE = [False, True, True, True, False]
 
-
-if __name__ == "__main__":
-    state = DEFAULT_STATE_DICT
-
+def present(presentation_path, is_folder=True):
     handTracker = HandTracker()
 
     gesture1 = GestureTracker2D()
@@ -66,8 +63,6 @@ if __name__ == "__main__":
     def show_pointer(coords):
         displayManager.show_pointer(coords[1])
 
-    def annotate(coords):
-        displayManager.annotate(coords[1])
 
     # gesture1.addGesture(SLIDE_CHANGE_GESTURE)
     gesture2.addGesture(POINTER_GESTURE)
@@ -105,10 +100,18 @@ if __name__ == "__main__":
     pointer.setOnUpdate(show_pointer)
 
     # displayManager.load_from_pptx('test2.pptx')
-    displayManager.load_folder('test')
+    if is_folder:
+        displayManager.load_folder(presentation_path)
+    else:
+        displayManager.load_from_pptx(presentation_path)
 
     trackerThread = Thread(target=runner.loop, args=[handTracker])
 
     trackerThread.start()
 
     displayManager.runLoop()
+
+
+
+if __name__ == "__main__":
+    present_folder('test')
