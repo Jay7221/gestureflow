@@ -60,6 +60,9 @@ class DisplayManager:
         self.image_label.pack()
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
+    def on_resize(self, event):
+        self.show()
+
     def erase(self, point1, point2):
         cur_slide = self.canvas[self.slideNumber]
         cv2.line(cur_slide, point1, point2,
@@ -123,8 +126,13 @@ class DisplayManager:
         self.show()
 
     def show(self):
+        width, height = (self.root.winfo_width(), self.root.winfo_height())
         cur_slide = self.canvas[self.slideNumber]
         pil_slide = Image.fromarray(cur_slide)
+        slide_width, slide_height = pil_slide.size
+        slide_width = max(slide_width, width)
+        slide_height = max(slide_height, height)
+        pil_slide = pil_slide.resize((slide_width, slide_height))
 
         photo = ImageTk.PhotoImage(pil_slide)
         self.image_label.config(image=photo)
