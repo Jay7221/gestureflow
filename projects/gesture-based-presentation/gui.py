@@ -14,9 +14,6 @@ from setting_gui import open_setting
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 
-
-
-
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"/home/calto/build/assets/frame0")
 PRESENTATIONS_PATH = './presentations/'
@@ -25,24 +22,24 @@ PRESENTATIONS_PATH = './presentations/'
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+
 def open_home():
     window = Tk()
 
     window.geometry("1440x1024")
-    window.configure(bg = "#353333")
-
+    window.configure(bg="#353333")
 
     canvas = Canvas(
         window,
-        bg = "#353333",
-        height = 1024,
-        width = 1440,
-        bd = 0,
-        highlightthickness = 0,
-        relief = "ridge"
+        bg="#353333",
+        height=1024,
+        width=1440,
+        bd=0,
+        highlightthickness=0,
+        relief="ridge"
     )
 
-    canvas.place(x = 0, y = 0)
+    canvas.place(x=0, y=0)
 
     button_image_1 = PhotoImage(
         file=os.path.join('assets', 'frame0', 'button_1.png'))
@@ -51,7 +48,7 @@ def open_home():
         image=button_image_1,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda:open_file_dialog(window),
+        command=lambda: open_file_dialog(window),
         relief="flat"
     )
     button_1.place(
@@ -70,20 +67,13 @@ def open_home():
         outline="")
 
     folders = []
-    for item in os.listdir(PRESENTATIONS_PATH): 
-        folders.append(item) 
-
-
-
-
-
-
+    for item in os.listdir(PRESENTATIONS_PATH):
+        folders.append(item)
 
     folder_icon = PhotoImage(
         file=os.path.join('assets', 'frame0', 'button_2.png'))
 
     show_folder_icons(window, canvas, folder_icon, folders)
-
 
     image_image_1 = PhotoImage(
         file=os.path.join('assets', 'frame0', 'image_1.png')
@@ -100,6 +90,7 @@ def open_home():
     def open_gesture_custom():
         window.destroy()
         open_setting()
+
     button_4 = Button(
         image=button_image_4,
         borderwidth=0,
@@ -126,5 +117,6 @@ def open_home():
     window.resizable(True, True)
     window.mainloop()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     open_home()
