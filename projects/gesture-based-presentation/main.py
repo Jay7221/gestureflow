@@ -11,6 +11,7 @@ from gesture_trackers import TwoHandTracker
 from settings import GESTURES, POINTING_GESTURE, ANNOTATING_GESTURE, ERASE_GESTURE, SLIDE_CHANGE_GESTURE, POINTER_SIZE_CHANGE_GESTURE
 import json
 import os
+import mediapipe as mp
 
 if os.path.exists(GESTURE_FILE):
     with open(GESTURE_FILE, 'r') as gesture_file:
@@ -37,6 +38,7 @@ POINTER_SIZE_CHANGE_GESTURE_LEFT_HAND, POINTER_SIZE_CHANGE_GESTURE_RIGHT_HAND = 
 
 def present(presentation_path, is_folder=True):
     handTracker = HandTracker()
+    handTracker.mp_hands = mp.solutions.hands.Hands(static_image_mode=False, min_detection_confidence=.7, min_tracking_confidence=0.7, max_num_hands=2)
 
     gesture1 = GestureTracker2D()
     gesture2 = GestureTracker2D()
