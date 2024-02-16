@@ -13,30 +13,25 @@ import json
 import os
 import mediapipe as mp
 
-if os.path.exists(GESTURE_FILE):
-    with open(GESTURE_FILE, 'r') as gesture_file:
-        GESTURES = json.load(gesture_file)
+def prep_gestures():
+    global GESTURES
+    if os.path.exists(GESTURE_FILE):
+        with open(GESTURE_FILE, 'r') as gesture_file:
+            GESTURES = json.load(gesture_file)
 
-POINTER_GESTURE = [False, True, False, False, False]
-ANNOTATION_GESTURE = [False, True, True, False, False]
-ERASER_GESTURE = [True, True, True, True, True]
+    global POINTER_GESTURE, ANNOTATION_GESTURE, ERASER_GESTURE, SLIDE_CHANGE_GESTURE_LEFT_HAND, SLIDE_CHANGE_GESTURE_RIGHT_HAND, POINTER_SIZE_CHANGE_GESTURE_LEFT_HAND, POINTER_SIZE_CHANGE_GESTURE_RIGHT_HAND
 
 
-RIGHT_HAND_GESTURE = [False, True, True, True, False]
+    POINTER_GESTURE = GESTURES[POINTING_GESTURE]
+    ANNOTATION_GESTURE = GESTURES[ANNOTATING_GESTURE]
+    ERASER_GESTURE = GESTURES[ERASE_GESTURE]
 
-SLIDE_CHANGE_LEFT_HAND_GESTURE = [True, True, True, True, True]
-POINTER_SIZE_LEFT_HAND_GESTURE = [False, True, True, True, True]
-ERASER_SIZE_LEFT_HAND_GESTURE = [False, True, True, True, False]
-
-POINTER_GESTURE = GESTURES[POINTING_GESTURE]
-ANNOTATION_GESTURE = GESTURES[ANNOTATING_GESTURE]
-ERASER_GESTURE = GESTURES[ERASE_GESTURE]
-
-SLIDE_CHANGE_GESTURE_LEFT_HAND, SLIDE_CHANGE_GESTURE_RIGHT_HAND = GESTURES[SLIDE_CHANGE_GESTURE]
-POINTER_SIZE_CHANGE_GESTURE_LEFT_HAND, POINTER_SIZE_CHANGE_GESTURE_RIGHT_HAND = GESTURES[POINTER_SIZE_CHANGE_GESTURE]
+    SLIDE_CHANGE_GESTURE_LEFT_HAND, SLIDE_CHANGE_GESTURE_RIGHT_HAND = GESTURES[SLIDE_CHANGE_GESTURE]
+    POINTER_SIZE_CHANGE_GESTURE_LEFT_HAND, POINTER_SIZE_CHANGE_GESTURE_RIGHT_HAND = GESTURES[POINTER_SIZE_CHANGE_GESTURE]
 
 
 def present(presentation_path, is_folder=True):
+    prep_gestures()
     handTracker = HandTracker()
     handTracker.mp_hands = mp.solutions.hands.Hands(static_image_mode=False, min_detection_confidence=.7, min_tracking_confidence=0.7, max_num_hands=2)
 
@@ -94,14 +89,11 @@ def present(presentation_path, is_folder=True):
     gesture3.addGesture(ANNOTATION_GESTURE)
     gesture4.addGesture(ERASER_GESTURE)
 
-    two_hand_gesture1.set_left_gesture(SLIDE_CHANGE_LEFT_HAND_GESTURE)
+    two_hand_gesture1.set_left_gesture(SLIDE_CHANGE_GESTURE_LEFT_HAND)
     two_hand_gesture1.set_right_gesture(SLIDE_CHANGE_GESTURE_RIGHT_HAND)
 
     two_hand_gesture2.set_left_gesture(POINTER_SIZE_CHANGE_GESTURE_LEFT_HAND)
     two_hand_gesture2.set_right_gesture(POINTER_SIZE_CHANGE_GESTURE_RIGHT_HAND)
-
-    two_hand_gesture3.set_left_gesture(ERASER_SIZE_LEFT_HAND_GESTURE)
-    two_hand_gesture3.set_right_gesture(RIGHT_HAND_GESTURE)
 
     gesture1.addStateTracker(slideNumber)
     gesture2.addStateTracker(pointer)
